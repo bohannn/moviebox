@@ -1,6 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Text, View } from 'react-native';
-import { Button, Avatar, Overlay, Input, SocialIcon, ListItem } from 'react-native-elements';
+import { Button, Avatar, Overlay, Input, SocialIcon, ListItem, Slider } from 'react-native-elements';
+import * as Brightness from 'expo-brightness';
+import { useKeepAwake } from 'expo-keep-awake';
 
 const list = [
     {
@@ -31,6 +33,16 @@ export default function me() {
       setVisible(!visible);
     };
 
+    const [status, setStatus] = useState(1);
+    
+    function set(a) {
+        setStatus(a);
+       Brightness.setSystemBrightnessAsync(status); 
+    }
+    useKeepAwake();
+
+
+        
     return (
 
         <View style={{flex: 1, backgroundColor: 'black'}}>
@@ -75,9 +87,8 @@ export default function me() {
                                                 
                 </Overlay>
             </View>
-            
 
-            <View style={{marginTop: 50}}>
+            <View style={{marginTop: 110}}>
                 {
                     list.map((item, i) => (
                         <ListItem 
@@ -90,6 +101,15 @@ export default function me() {
                     ))
                 }
             </View>
+
+            <Slider 
+                style={{marginTop: 10}} 
+                thumbTintColor='orange' 
+                maximumTrackTintColor="gray" 
+                minimumTrackTintColor="white" 
+                value={status} 
+                onValueChange={value => set(value)}
+            />            
         </View>
     )
 }
